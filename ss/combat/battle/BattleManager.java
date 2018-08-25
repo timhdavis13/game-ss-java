@@ -3,14 +3,18 @@ package com.thd.ss.combat.battle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thd.ss.RandomGenerator;
 import com.thd.ss.combat.FieldCharacter;
 import com.thd.ss.combat.SkillTurnAction;
 import com.thd.ss.combat.skills.Skill;
 import com.thd.ss.combat.skills.SkillUser;
+import com.thd.ss.ui.MapGridView;
+import com.thd.ss.ui.PressEnterToContinueView;
 import com.thd.ss.ui.SkillSelectionView;
+import com.thd.ss.ui.TeamListView;
 
 // Singleton Pattern:
-public class BattleManager implements TurnBeginListener, TurnEndListener // TODO: create a Battle class that this class uses...
+public class BattleManager implements TurnBeginListener, TurnEndListener, TurnActionCompleteListener // TODO: create a Battle class that this class uses...
 {
 	// Private members:
 	private List<TurnAction> nextTurnActions;
@@ -78,12 +82,16 @@ public class BattleManager implements TurnBeginListener, TurnEndListener // TODO
 	{
 		this.turnManager.registerTurnBeginListener(this);
 		this.turnManager.registerTurnEndListener(this);
+		
+		this.turnManager.registerTurnActionCompleteListener(this);
 	}
 	
 	public void cleanupBattle()
 	{
 		this.turnManager.unregisterTurnBeginListener(this);
 		this.turnManager.unregisterTurnEndListener(this);
+		
+		this.turnManager.unregisterTurnActionCompleteListener(this);
 	}
 	
 	public boolean isBattleOver()
@@ -122,15 +130,35 @@ public class BattleManager implements TurnBeginListener, TurnEndListener // TODO
 		// TODO ... Fix up ...
 		for (FieldCharacter fieldCharacter : BattleTeamsManager.getPlayerCharacters())
 		{
-			SkillUser skillUser = (SkillUser) fieldCharacter;
+			if (fieldCharacter.getHealthPoints().getCurrentValue() > 0)
+			{
+				SkillUser skillUser = (SkillUser) fieldCharacter;
+				TurnActionPerformer performer = (TurnActionPerformer) fieldCharacter;
 
-			SkillSelectionView skillSelectionView = new SkillSelectionView(skillUser);
-			
-			Skill selectedSkill = skillSelectionView.promptSkillSelection(); // TODO: Let user pick range...
-			
-			TurnAction skillTurnAction = new SkillTurnAction(skillUser, selectedSkill);
-			
-			BattleManager.addTurnAction(skillTurnAction);
+				SkillSelectionView skillSelectionView = new SkillSelectionView(skillUser);
+				
+				Skill selectedSkill = skillSelectionView.promptSkillSelection(); // TODO: Let user pick range...
+				
+				TurnAction skillTurnAction = new SkillTurnAction(performer, skillUser, selectedSkill);
+				
+				BattleManager.addTurnAction(skillTurnAction);
+			}
+		}
+		
+		for (FieldCharacter fieldCharacter : BattleTeamsManager.getEnemyCharacters())
+		{
+			if (fieldCharacter.getHealthPoints().getCurrentValue() > 0)
+			{
+				SkillUser skillUser = (SkillUser) fieldCharacter;
+				TurnActionPerformer performer = (TurnActionPerformer) fieldCharacter;
+				
+				int randomSkillIndex = RandomGenerator.randomNumber(0, skillUser.getSkills().size() - 1);
+				Skill selectedSkill = skillUser.getSkills().get(randomSkillIndex); // TODO: Pick random range...
+				
+				TurnAction skillTurnAction = new SkillTurnAction(performer, skillUser, selectedSkill);
+				
+				BattleManager.addTurnAction(skillTurnAction);
+			}
 		}
 		
 		readyForNextTurn(); // TODO: change to a notification ...
@@ -165,6 +193,16 @@ public class BattleManager implements TurnBeginListener, TurnEndListener // TODO
 	{
 		// TODO Auto-generated method stub
 		System.out.println("====> BattleManager: onTurnBegun(): Turn has begun...."); // TODO: TESTING ONLY.
+	}
+
+	@Override
+	public void onTurnActionComplete() 
+	{
+		MapGridView.showMap();
+		
+		TeamListView.showTeams();
+		
+		PressEnterToContinueView.waitForContinue();
 	}
 	
 	// Events:

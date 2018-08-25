@@ -8,6 +8,7 @@ import com.thd.ss.actions.Action;
 import com.thd.ss.actions.ActionUser;
 import com.thd.ss.actions.TargetSelection;
 import com.thd.ss.actions.Targetable;
+import com.thd.ss.combat.battle.TurnActionPerformer;
 import com.thd.ss.combat.skills.Skill;
 import com.thd.ss.combat.skills.SkillCost;
 import com.thd.ss.combat.skills.SkillUser;
@@ -22,6 +23,7 @@ import com.thd.ss.field.FieldOccupant;
  */
 public class FieldCharacter implements FieldOccupant, 
 	SkillUser, ActionUser, 
+	TurnActionPerformer,
 	TargetSelection, Targetable,
 	ElementalBodied,
 	Damageable, ElementDamageable,
@@ -46,6 +48,7 @@ public class FieldCharacter implements FieldOccupant,
 	private ElementType primaryBodyElement;
 	
 	private ElementDamageableComponent damageableComponent;
+	private DestroyableComponent destroyableComponent;
 	
 	// Constructor:
 	public FieldCharacter(String name, int maximumHealthPoints, int maximumBrawlPoints, int maximumFocusPoints)
@@ -60,6 +63,7 @@ public class FieldCharacter implements FieldOccupant,
 		this.bodyElements = new HashSet<ElementType>();
 		
 		this.damageableComponent = new ElementDamageableComponent(healthPoints, this, this);
+		this.destroyableComponent = new DestroyableComponent(this);
 	}
 	
 	// Getters and setters:
@@ -290,6 +294,26 @@ public class FieldCharacter implements FieldOccupant,
 	public void destroy() 
 	{
 		this.defeat();
+		
+		this.destroyableComponent.destroy();
+	}
+	
+	@Override
+	public void registerDestroyListener(DestroyListener listener) 
+	{
+		this.destroyableComponent.registerDestroyListener(listener);
+	}
+
+	@Override
+	public void unregisterDestroyListener(DestroyListener listener) 
+	{
+		this.destroyableComponent.unregisterDestroyListener(listener);
+	}
+
+	@Override
+	public void notifyDestroyListeners() 
+	{
+		this.destroyableComponent.notifyDestroyListeners();
 	}
 	
 	

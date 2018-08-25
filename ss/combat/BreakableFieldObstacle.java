@@ -14,6 +14,7 @@ public class BreakableFieldObstacle extends FieldObstacle implements TargetSelec
 	protected ValuePoints hitPoints;
 	
 	private DamageableComponent damageableComponent;
+	private DestroyableComponent destroyableComponent;
 	
 	// Constructor:
 	public BreakableFieldObstacle(String name, int maxDamage)
@@ -23,6 +24,7 @@ public class BreakableFieldObstacle extends FieldObstacle implements TargetSelec
 		this.hitPoints = new ValuePoints(maxDamage);
 		
 		this.damageableComponent = new DamageableComponent(this.hitPoints, this);
+		this.destroyableComponent = new DestroyableComponent(this);
 	}
 	
 	// Getters:
@@ -65,18 +67,7 @@ public class BreakableFieldObstacle extends FieldObstacle implements TargetSelec
 		this.damageableComponent.damage(amount);
 	}
 	
-	@Override
-	public void destroy() 
-	{
-		// TODO:
-		System.out.println("The " + getName() + " is destroyed!"); // TODO: DEBUG ONLY.
-		
-		// Remove self from current location:
-		if (getCurrentLocation() != null)
-		{
-			getCurrentLocation().removeOccupant();
-		}
-	}
+	
 
 	@Override
 	public void registerDamageListener(DamageListener listener) 
@@ -96,6 +87,41 @@ public class BreakableFieldObstacle extends FieldObstacle implements TargetSelec
 		damageableComponent.notifyDamageListeners(event);
 	}
 	
+	//// Destroyable:
+	
+	@Override
+	public void destroy() 
+	{
+		// TODO:
+		System.out.println("The " + getName() + " is destroyed!"); // TODO: DEBUG ONLY.
+		
+		// Remove self from current location:
+		if (getCurrentLocation() != null)
+		{
+			getCurrentLocation().removeOccupant();
+		}
+		
+		this.destroyableComponent.destroy();
+	}
+	
+	@Override
+	public void registerDestroyListener(DestroyListener listener) 
+	{
+		this.destroyableComponent.registerDestroyListener(listener);
+	}
+
+	@Override
+	public void unregisterDestroyListener(DestroyListener listener) 
+	{
+		this.destroyableComponent.unregisterDestroyListener(listener);
+	}
+
+	@Override
+	public void notifyDestroyListeners() 
+	{
+		this.destroyableComponent.notifyDestroyListeners();
+	}
+	
 	// General methods:
 	
 	@Override
@@ -105,10 +131,6 @@ public class BreakableFieldObstacle extends FieldObstacle implements TargetSelec
 				+ ", hit points:" + this.hitPoints
 				+"]";
 	}
-
-	
-
-	
 
 	
 }

@@ -47,6 +47,22 @@ public class FieldCharacterLoader
 			
 			return character;
 		}
+		else if(characterName.equals("foe"))
+		{
+			FieldCharacter character = new FieldCharacter("Foe", 10, 50, 50);
+			
+			// Body Elements:
+			character.addBodyElement(ElementType.NON_ELEMENTAL);
+			
+			// Skills:
+			character.addSkill(SkillFactory.getSkillByName("Burst"));
+			
+			setDamageMessageView(character);
+			
+			BattleTeamsManager.addEnemyCharacter(character);
+			
+			return character;
+		}
 		else
 		{
 			// TODO: throw error

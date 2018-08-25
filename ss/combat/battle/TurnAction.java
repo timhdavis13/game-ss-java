@@ -5,4 +5,6 @@ public interface TurnAction
 	int getPriority();
 	
 	void performAction();
+	
+	TurnActionPerformer getPerformer();
 }

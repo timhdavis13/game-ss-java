@@ -3,8 +3,6 @@ package com.thd.ss.combat.battle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.thd.ss.field.FieldMapManager;
-
 public class TurnManager 
 {
 	// Private members:
@@ -15,6 +13,8 @@ public class TurnManager
 	private List<TurnBeginListener> turnBeginListeners;
 	private List<TurnEndListener> turnEndListeners;
 	
+	private List<TurnActionCompleteListener> turnActionCompleteListeners;
+	
 	// Constructor:
 	public TurnManager()
 	{
@@ -22,6 +22,8 @@ public class TurnManager
 		
 		this.turnBeginListeners = new ArrayList<TurnBeginListener>();
 		this.turnEndListeners = new ArrayList<TurnEndListener>();
+		
+		this.turnActionCompleteListeners = new ArrayList<TurnActionCompleteListener>();
 	}
 	
 	// Getters:
@@ -47,9 +49,7 @@ public class TurnManager
 		{
 			this.currentTurn.performNextTurnAction();
 			
-			// TODO: TESTING ONLY:
-			FieldMapManager.drawMap();
-			// TODO: create a notification for OnTurnActionComplete(TurnAction)....
+			this.notifyTurnActionCompleted();
 		}
 		
 		this.currentTurn.end();
@@ -96,6 +96,26 @@ public class TurnManager
 		for (TurnEndListener listener : this.turnEndListeners)
 		{
 			listener.onTurnEnd();
+		}
+	}
+	
+	//// TurnAction Complete Listeners:
+	
+	public void registerTurnActionCompleteListener(TurnActionCompleteListener listener)
+	{
+		this.turnActionCompleteListeners.add(listener);
+	}
+	
+	public void unregisterTurnActionCompleteListener(TurnActionCompleteListener listener)
+	{
+		this.turnActionCompleteListeners.remove(listener);
+	}
+	
+	public void notifyTurnActionCompleted()
+	{
+		for (TurnActionCompleteListener listener : this.turnActionCompleteListeners)
+		{
+			listener.onTurnActionComplete();
 		}
 	}
 	

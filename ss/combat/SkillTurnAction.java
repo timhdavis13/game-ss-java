@@ -1,18 +1,21 @@
 package com.thd.ss.combat;
 
 import com.thd.ss.combat.battle.TurnAction;
+import com.thd.ss.combat.battle.TurnActionPerformer;
 import com.thd.ss.combat.skills.Skill;
 import com.thd.ss.combat.skills.SkillUser;
 
 public class SkillTurnAction implements TurnAction
 {
 	// Private members:
+	private TurnActionPerformer performer;
 	private Skill skill;
 	private SkillUser user;
 	
 	// Constructor:
-	public SkillTurnAction(SkillUser user, Skill skill)
+	public SkillTurnAction(TurnActionPerformer performer, SkillUser user, Skill skill)
 	{
+		this.performer = performer;
 		this.setUser(user);
 		this.setSkill(skill);
 	}
@@ -34,6 +37,12 @@ public class SkillTurnAction implements TurnAction
 		System.out.println("===> SkillTurnAction: performAction(): " + this); // TODO: TESTING ONLY.
 		
 		this.user.useSkill(this.skill);
+	}
+	
+	@Override
+	public TurnActionPerformer getPerformer() 
+	{
+		return this.performer;
 	}
 	
 	// Getters and setters:
@@ -60,5 +69,7 @@ public class SkillTurnAction implements TurnAction
 		return "[SkillTurnAction: priority=" + this.getPriority() + 
 				"; skillUser=" + this.user.getName() + "; skill=" + this.skill.getName() + "]";
 	}
+
+	
 	
 }

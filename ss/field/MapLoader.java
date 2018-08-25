@@ -14,6 +14,7 @@ public class MapLoader
 			
 			FieldCharacter joe = FieldCharacterLoader.loadCharacterFromName("joe");
 			FieldCharacter bob = FieldCharacterLoader.loadCharacterFromName("bob");
+			FieldCharacter foe = FieldCharacterLoader.loadCharacterFromName("foe");
 			
 			FieldObstacle tree = FieldObjectLoader.loadObjectFromName("tree");
 			
@@ -28,6 +29,8 @@ public class MapLoader
 				fieldMap.addOccupant(tree, 1, 0);
 				
 				fieldMap.addOccupant(bush, 1, 1);
+				
+				fieldMap.addOccupant(foe, 2, 2);
 			} 
 			catch (AlreadyOccupiedException e)
 			{

@@ -8,6 +8,7 @@ package com.thd.ss.field;
 
 public interface FieldOccupant
 {
+	String getName();
 	FieldLocation getCurrentLocation();
 	void setCurrentLocation(FieldLocation currentLocation);
 }

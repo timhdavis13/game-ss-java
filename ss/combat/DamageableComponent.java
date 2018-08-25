@@ -30,8 +30,8 @@ public class DamageableComponent implements Damageable
 		DamageEvent event = new DamageEvent(plannedDamage, actualDamage);
 		this.notifyDamageListeners(event);
 		
-		// Destroy if health is below zero:
-		if (this.healthPoints.getCurrentValue() == 0)
+		// Destroy if health is below or equal to zero:
+		if (this.healthPoints.getCurrentValue() <= 0)
 		{
 			this.destroyable.destroy();
 		}

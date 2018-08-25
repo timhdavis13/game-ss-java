@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TurnScheduler 
+import com.thd.ss.combat.DestroyListener;
+import com.thd.ss.combat.Destroyable;
+
+public class TurnScheduler implements DestroyListener
 {
 	// Private members:
 	private List<TurnAction> pendingTurnActions;
@@ -26,6 +29,16 @@ public class TurnScheduler
 	public void addTurnAction(TurnAction turnAction)
 	{
 		this.pendingTurnActions.add(turnAction);
+		
+		if (turnAction.getPerformer() instanceof Destroyable)
+		{
+			System.out.println("************DEBUG: Listening to destroyable: " + 
+					turnAction.getPerformer().getName() + " ************");
+			
+			Destroyable destroyable = (Destroyable) turnAction.getPerformer();
+			
+			destroyable.registerDestroyListener(this);
+		}
 		
 		this.isSorted = false;
 	}
@@ -75,5 +88,41 @@ public class TurnScheduler
 	public int getNumberTurnActionsComplete()
 	{
 		return ((this.completedTurnActions == null) ? 0 : this.completedTurnActions.size());
+	}
+	
+	
+	public void removeAllActionsByPerformer(TurnActionPerformer performer)
+	{
+		List<TurnAction> performersPendingTurnActions = new ArrayList<TurnAction>();
+		
+		// Find all (pending) turn actions by this turn action performer:
+		for (TurnAction turnAction : this.pendingTurnActions)
+		{
+			if (turnAction.getPerformer() == performer)
+			{
+				performersPendingTurnActions.add(turnAction);
+			}
+		}
+		
+		// Remove all the pending turn actions by this performer from the list of pending turn actions:
+		for (TurnAction performersPendingTurnAction : performersPendingTurnActions)
+		{
+			System.out.println("************DEBUG: Removing action: " + performersPendingTurnAction + "************");
+			this.pendingTurnActions.remove(performersPendingTurnAction);
+		}
+	}
+	
+	//// DestroyListener implementation:
+
+	@Override
+	public void onDestroyed(Destroyable destroyable) 
+	{
+		System.out.println("************DEBUG: Destoryable was DESTROYED************");
+		if (destroyable instanceof TurnActionPerformer)
+		{
+			TurnActionPerformer performer = (TurnActionPerformer) destroyable;
+			
+			removeAllActionsByPerformer(performer);
+		}
 	}
 }
