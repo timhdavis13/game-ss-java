@@ -44,5 +44,10 @@ public class GameManager
 		BattleManager.beginBattle();
 	}
 	
+	public static void cleanupBattle()
+	{
+		BattleManager.getInstance().cleanupBattle();
+	}
+	
 	
 }

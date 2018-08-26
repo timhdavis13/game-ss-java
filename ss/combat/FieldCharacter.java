@@ -115,6 +115,16 @@ public class FieldCharacter implements FieldOccupant,
 		this.baseSpeed = baseSpeed;
 	}
 	
+	public boolean isAlive()
+	{
+		return this.healthPoints.getCurrentValue() > 0;
+	}
+	
+	public boolean isDefeated()
+	{
+		return !this.isAlive();
+	}
+	
 	// Implementations:
 		
 	//// ActionUser implementations:

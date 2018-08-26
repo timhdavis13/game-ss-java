@@ -59,6 +59,36 @@ public class BattleTeamsManager
 		getInstance().playerTeamMembers.remove(playerCharacter);
 	}
 	
+	public static List<FieldCharacter> getLivingPlayerTeamMembers()
+	{
+		List<FieldCharacter> livingPlayerTeamMembers = new ArrayList<FieldCharacter>();
+		
+		for (FieldCharacter character : getInstance().playerTeamMembers)
+		{
+			if (character.isAlive())
+			{
+				livingPlayerTeamMembers.add(character);
+			}
+		}
+		
+		return livingPlayerTeamMembers;
+	}
+	
+	public static List<FieldCharacter> getDefeatedPlayerTeamMember()
+	{
+		List<FieldCharacter> defeatedPlayerTeamMembers = new ArrayList<FieldCharacter>();
+		
+		for (FieldCharacter character : getInstance().playerTeamMembers)
+		{
+			if (character.isDefeated())
+			{
+				defeatedPlayerTeamMembers.add(character);
+			}
+		}
+		
+		return defeatedPlayerTeamMembers;
+	}
+	
 	//// Enemy Team:
 	
 	public static List<FieldCharacter> getEnemyCharacters()
@@ -74,6 +104,36 @@ public class BattleTeamsManager
 	public static void removeEnemyCharacter(FieldCharacter enemyCharacter)
 	{
 		getInstance().enemyTeamMembers.remove(enemyCharacter);
+	}
+	
+	public static List<FieldCharacter> getLivingEnemyTeamMembers()
+	{
+		List<FieldCharacter> livingEnemyTeamMembers = new ArrayList<FieldCharacter>();
+		
+		for (FieldCharacter character : getInstance().enemyTeamMembers)
+		{
+			if (character.isAlive())
+			{
+				livingEnemyTeamMembers.add(character);
+			}
+		}
+		
+		return livingEnemyTeamMembers;
+	}
+	
+	public static List<FieldCharacter> getDefeatedEnemyTeamMembers()
+	{
+		List<FieldCharacter> defeatedEnemyTeamMembers = new ArrayList<FieldCharacter>();
+		
+		for (FieldCharacter character : getInstance().enemyTeamMembers)
+		{
+			if (character.isDefeated())
+			{
+				defeatedEnemyTeamMembers.add(character);
+			}
+		}
+		
+		return defeatedEnemyTeamMembers;
 	}
 	
 }

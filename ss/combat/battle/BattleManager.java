@@ -19,8 +19,6 @@ public class BattleManager implements TurnBeginListener, TurnEndListener, TurnAc
 	// Private members:
 	private List<TurnAction> nextTurnActions;
 	private TurnManager turnManager;
-	// TODO: teams
-	// TODO: field
 	
 	// Singleton instance:
 	private static BattleManager instance;
@@ -75,7 +73,6 @@ public class BattleManager implements TurnBeginListener, TurnEndListener, TurnAc
 		// TODO battle cleanup...
 		System.out.println("====> Battle Manager: endBattle() called."); // TODO: TESTING ONLY.
 		
-		getInstance().cleanupBattle();
 	}
 	
 	public void setupBattle()
@@ -88,6 +85,7 @@ public class BattleManager implements TurnBeginListener, TurnEndListener, TurnAc
 	
 	public void cleanupBattle()
 	{
+		// NOTE: sTo avoid ConcurrentModificationException, cannot unregister from OnTurnEnd().
 		this.turnManager.unregisterTurnBeginListener(this);
 		this.turnManager.unregisterTurnEndListener(this);
 		
@@ -96,8 +94,13 @@ public class BattleManager implements TurnBeginListener, TurnEndListener, TurnAc
 	
 	public boolean isBattleOver()
 	{
-		// TODO ...
-		return false;
+		// Battle is over if all enemies or all players are defeated:
+		
+		System.out.println("LivingEnemyTeamMembers().size() == " + BattleTeamsManager.getLivingEnemyTeamMembers().size());
+		System.out.println("LivingPlayerTeamMembers().size() == " + BattleTeamsManager.getLivingPlayerTeamMembers().size());
+		
+		return (BattleTeamsManager.getLivingEnemyTeamMembers().size() < 1
+		|| BattleTeamsManager.getLivingPlayerTeamMembers().size() < 1);
 	}
 	
 	

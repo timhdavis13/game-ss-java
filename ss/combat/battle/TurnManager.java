@@ -1,6 +1,7 @@
 package com.thd.ss.combat.battle;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class TurnManager 
@@ -93,8 +94,12 @@ public class TurnManager
 	
 	public void notifyTurnHasEnded()
 	{
-		for (TurnEndListener listener : this.turnEndListeners)
+		Iterator<TurnEndListener> iterator = this.turnEndListeners.iterator();
+		
+		while (iterator.hasNext())
 		{
+			TurnEndListener listener = iterator.next();
+			
 			listener.onTurnEnd();
 		}
 	}

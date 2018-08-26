@@ -1,6 +1,5 @@
 package com.thd.ss.ui;
 
-import com.thd.ss.actions.Action;
 import com.thd.ss.combat.skills.Skill;
 import com.thd.ss.combat.skills.SkillUser;
 
@@ -48,6 +47,9 @@ public class SkillSelectionView
 		// then set chosen range selection ...
 		
 		// then set this skill with this range selection as the Turn Action ...
+		
+		SkillTargetSelectionView targetSelectionView = new SkillTargetSelectionView();
+		targetSelectionView.showTargets(skillUser, selectedSkill); // Lets user pick target.
 		
 		return selectedSkill;
 	}

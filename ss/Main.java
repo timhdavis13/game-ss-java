@@ -315,6 +315,8 @@ public class Main
 		
 		System.out.println("------ BATTLE ENDS ----");
 		
+		GameManager.cleanupBattle();
+		
 		FieldMapManager.drawMap(); // TESTING ...
 		
 	}
